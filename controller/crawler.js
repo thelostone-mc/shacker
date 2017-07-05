@@ -12,9 +12,9 @@ const headlessCrawl = (trackingId) => {
     }
 
     const instance = await phantom.create();
-    url = url + trackingId
-    const page = await instance.createPage();
+    url = url + trackingId;
 
+    const page = await instance.createPage();
     const status = await page.open(url);
 
     setTimeout(async function(){
@@ -22,7 +22,6 @@ const headlessCrawl = (trackingId) => {
       await instance.exit();
       resolve(content);
     }, TIMEOUT);
-
   });
 };
 

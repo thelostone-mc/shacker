@@ -1,12 +1,24 @@
 const crawler = require('./controller/crawler.js');
-      purifier = require('./controller/purifier.js');
+      purifier = require('./controller/purifier.js'),
+      utils = require('./controller/utils.js');
 
-const list = ["LW377059748CN,LK272056367CN"];
+const shipments = [
+  {
+    id: "LW377059748CN",
+    zip: 77028
+  },
+  {
+    id: "LK272056367CN",
+    city: "LA"
+  },
+  {
+    id: "LW431678671CN",
+    city: "LA"
+  }
+];
 
-crawler.headlessCrawl("LW431678671CN").then((content) => {
-  console.log(purifier.extractDataUnit(content));
-});
+const shipmentIds = utils.getKeyProperties(shipments, "id");
 
-crawler.headlessCrawl(list).then((content) => {
-  console.log(purifier.extractDataSet(content));
+crawler.headlessCrawl(shipmentIds).then((content) => {
+  console.log(purifier.extractDataSet(content, shipments));
 });

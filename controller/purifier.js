@@ -1,13 +1,7 @@
-const cheerio = require('cheerio');
+const cheerio = require('cheerio'),
+      utils = require('./utils.js');;
 
-const extractDataUnit = (content) => {
-  return new Promise((resolve, reject) => {
-    const shipment = fetchDataPoint(content);
-    resolve(shipment);
-  });
-};
-
-const extractDataSet = (content) => {
+const extractDataSet = (content, _shipments) => {
   return new Promise((resolve, reject) => {
     const $ = cheerio.load(content);
     let shipments = [];
@@ -17,7 +11,14 @@ const extractDataSet = (content) => {
     }
 
     $('.jsResultBlock').filter((i, shipment) => {
-      shipments.push(fetchDataPoint($.html(shipment)));
+      const matchId = _shipments[i].zip ? _shipments[i].zip : _shipments[i].city;
+      if(!matchId) {
+        console.log("extractDataSet: zip / city not provided:",
+          _shipments[i].id);
+      }
+      else {
+        shipments.push(fetchDataPoint($.html(shipment), matchId));
+      }
     });
 
     resolve(shipments);
@@ -25,7 +26,7 @@ const extractDataSet = (content) => {
 };
 
 
-const fetchDataPoint = (content) => {
+const fetchDataPoint = (content, matchId) => {
   const $ = cheerio.load(content);
   let shipment = {};
 
@@ -44,6 +45,9 @@ const fetchDataPoint = (content) => {
 
   if($('.newest').text()) {
     shipment.latestEvent = $('.newest').text();
+    if(shipment.flagStatus.startsWith('Delivered')) {
+      shipment.zip_state = utils.matchString(shipment.latestEvent, matchId);
+    }
   } else {
     console.log("extractDataSet: unable to get latestEvent",
       shipment.trackingId);
@@ -61,6 +65,5 @@ const fetchDataPoint = (content) => {
 }
 
 module.exports =  {
-  extractDataUnit,
   extractDataSet
 }
