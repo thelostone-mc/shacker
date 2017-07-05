@@ -38,6 +38,10 @@ const fetchDataPoint = (content, matchId) => {
 
   if($('.flag-status').text()) {
     shipment.flagStatus = $('.flag-status').text();
+
+    if(shipment.flagStatus == "Not Found") {
+        return shipment;
+    }
   } else {
     console.log("extractDataSet: unable to get flagStatus for",
       shipment.trackingId);

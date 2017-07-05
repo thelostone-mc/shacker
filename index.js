@@ -14,7 +14,11 @@ const shipments = [
   {
     id: "LW431678671CN",
     city: "LA"
-  }
+  },
+  {
+    id: "LW377123059748CN",
+    zip: 77028
+  },
 ];
 
 const shipmentIds = utils.getKeyProperties(shipments, "id");
