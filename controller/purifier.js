@@ -50,7 +50,7 @@ const fetchDataPoint = (content, matchId) => {
   if($('.newest').text()) {
     shipment.latestEvent = $('.newest').text();
     if(shipment.flagStatus.startsWith('Delivered')) {
-      shipment.zip_state = utils.matchString(shipment.latestEvent, matchId);
+      shipment.matchZipState = utils.matchString(shipment.latestEvent, matchId);
     }
   } else {
     console.log("extractDataSet: unable to get latestEvent",
