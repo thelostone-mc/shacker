@@ -14,7 +14,7 @@ const extractDataSet = (content, _shipments) => {
       const matchId = _shipments[i].zip ? _shipments[i].zip : _shipments[i].city;
       if(!matchId) {
         console.log("extractDataSet: zip / city not provided:",
-          _shipments[i].id);
+          _shipments[i].trackingId);
       }
       else {
         shipments.push(fetchDataPoint($.html(shipment), matchId));

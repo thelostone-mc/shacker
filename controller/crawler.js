@@ -1,9 +1,7 @@
 const phantom = require('phantom');
 
 const TIMEOUT = 5000;
-const headlessCrawl = (trackingId) => {
-  let url = "https://www.17track.net/en/track?nums=";
-
+const headlessCrawl = (trackingId, url) => {
   return new Promise(async (resolve, reject) => {
 
     if(!trackingId || trackingId == 0) {
@@ -13,7 +11,7 @@ const headlessCrawl = (trackingId) => {
 
     const instance = await phantom.create();
     url = url + trackingId;
-
+    console.log("Hitting", url);
     const page = await instance.createPage();
     const status = await page.open(url);
 

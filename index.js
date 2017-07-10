@@ -1,28 +1,16 @@
 const crawler = require('./controller/crawler.js');
       purifier = require('./controller/purifier.js'),
-      utils = require('./controller/utils.js');
+      utils = require('./controller/utils.js'),
+      test = require('./test.js'),
+      _ = require("underscore");
 
-const shipments = [
-  {
-    id: "LW377059748CN",
-    zip: 77028
-  },
-  {
-    id: "LK272056367CN",
-    city: "LA"
-  },
-  {
-    id: "LW431678671CN",
-    city: "LA"
-  },
-  {
-    id: "LW377123059748CN",
-    zip: 77028
-  },
-];
+const shipments = utils.setDefaultCarrierUrl(test.shipments);
+carriersShipment = utils.groupByCarrier(shipments);
 
-const shipmentIds = utils.getKeyProperties(shipments, "id");
-
-crawler.headlessCrawl(shipmentIds).then((content) => {
-  console.log(purifier.extractDataSet(content, shipments));
+_.each(carriersShipment, (carrier) => {
+  let url = carrier.url;
+  const shipmentIds = utils.getKeyProperties(carrier.shipments, "trackingId");
+  crawler.headlessCrawl(shipmentIds, url).then((content) => {
+    console.log(purifier.extractDataSet(content, shipments));
+  });
 });
