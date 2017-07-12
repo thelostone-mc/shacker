@@ -5,7 +5,9 @@ const crawler = require('./controller/crawler.js');
       _ = require("underscore");
 
 const shipments = utils.setDefaultCarrierUrl(test.shipments);
-carriersShipment = utils.groupByCarrier(shipments);
+let carriersShipment = utils.groupByCarrier(shipments);
+
+carriersShipment = utils.splitCarrierShipments(carriersShipment);
 
 _.each(carriersShipment, (carrier) => {
   let url = carrier.url;

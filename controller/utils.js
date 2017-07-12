@@ -1,5 +1,7 @@
 const _ = require("underscore");
 
+const SPLIT_LIMIT = 3;
+
 const getKeyProperties = (array, property) => {
   let list = [];
   array.forEach((object) => {
@@ -36,9 +38,34 @@ const groupByCarrier = (shipments) => {
   }).value();
 };
 
+const splitCarrierShipments = (shipments) => {
+  let _shipments = [];
+  _.each(shipments, (carriersShipment, index) => {
+    const url = carriersShipment.url;
+    const shipments = carriersShipment.shipments;
+    if(shipments.length / SPLIT_LIMIT > 0) {
+      const buckets = Math.ceil(shipments.length / SPLIT_LIMIT);
+
+      for (let i = 0; i < buckets; i++) {
+        const shipment = {
+          url: url,
+          shipments: shipments.splice(0, SPLIT_LIMIT)
+        };
+        _shipments.push(shipment);
+      }
+
+    } else {
+      _shipments.push(carriersShipment);
+    }
+  });
+
+  return _shipments;
+}
+
 module.exports =  {
   getKeyProperties,
   matchString,
   setDefaultCarrierUrl,
-  groupByCarrier
+  groupByCarrier,
+  splitCarrierShipments
 }
