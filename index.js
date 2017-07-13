@@ -13,6 +13,6 @@ _.each(carriersShipment, (carrier) => {
   let url = carrier.url;
   const shipmentIds = utils.getKeyProperties(carrier.shipments, "trackingId");
   crawler.headlessCrawl(shipmentIds, url).then((content) => {
-    console.log(purifier.extractDataSet(content, shipments));
+    console.log(purifier.extractDataSet(content, carrier.shipments));
   });
 });

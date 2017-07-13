@@ -16,7 +16,8 @@ const getKeyProperties = (array, property) => {
 };
 
 const matchString = (string, matcher) => {
-  return string.includes(matcher);
+  const pattern = new RegExp(matcher, "i");
+  return string.match(pattern);
 };
 
 const setDefaultCarrierUrl = (shipments) => {

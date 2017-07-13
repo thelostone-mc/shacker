@@ -29,7 +29,7 @@ const shipments = [
   },
   {
     trackingId: "EL738178395US",
-    zip: "36320",
+    zip: "36321",
     city: "cottonwood",
     state: "AL",
     country: "US"

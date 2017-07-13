@@ -11,13 +11,13 @@ const extractDataSet = (content, _shipments) => {
     }
 
     $('.jsResultBlock').filter((i, shipment) => {
-      const matchId = _shipments[i].zip ? _shipments[i].zip : _shipments[i].city;
-      if(!matchId) {
-        console.log("extractDataSet: zip / city not provided:",
+      if(!_shipments[i].zip && !_shipments[i].city &&
+        !_shipments[i].state && !_shipments[i].country) {
+        console.log("extractDataSet: zip, city, state and country not provided:",
           _shipments[i].trackingId);
       }
       else {
-        shipments.push(fetchDataPoint($.html(shipment), matchId));
+        shipments.push(fetchDataPoint($.html(shipment), _shipments[i]));
       }
     });
 
@@ -26,7 +26,7 @@ const extractDataSet = (content, _shipments) => {
 };
 
 
-const fetchDataPoint = (content, matchId) => {
+const fetchDataPoint = (content, _shipment) => {
   const $ = cheerio.load(content);
   let shipment = {};
 
@@ -50,7 +50,21 @@ const fetchDataPoint = (content, matchId) => {
   if($('.newest').text()) {
     shipment.latestEvent = $('.newest').text();
     if(shipment.flagStatus.startsWith('Delivered')) {
-      shipment.matchZipState = utils.matchString(shipment.latestEvent, matchId);
+      if(utils.matchString(shipment.latestEvent, _shipment.zip)) {
+        shipment.matchZipState = true;
+        shipment.matchedBy = "zip";
+      } else if(utils.matchString(shipment.latestEvent, _shipment.city)) {
+        shipment.matchZipState = true;
+          shipment.matchedBy = "city";
+      } else if(utils.matchString(shipment.latestEvent, _shipment.state)) {
+        shipment.matchZipState = true;
+          shipment.matchedBy = "state";
+      } else if(utils.matchString(shipment.latestEvent, _shipment.country)) {
+        shipment.matchZipState = true;
+          shipment.matchedBy = "country";
+      } else {
+        shipment.matchZipState = false;
+      }
     }
   } else {
     console.log("extractDataSet: unable to get latestEvent",
