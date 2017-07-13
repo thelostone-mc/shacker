@@ -11,6 +11,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.15.3",
+    "fs": "0.0.1-security",
     "phantom": "^4.0.4",
     "underscore": "^1.8.3"
   }
