@@ -28,7 +28,16 @@ const extractDataSet = (content, _shipments) => {
 
 const fetchDataPoint = (content, _shipment) => {
   const $ = cheerio.load(content);
-  let shipment = {};
+  let shipment = {
+    attackCaseId: _shipment.attackCaseId,
+    carrier: _shipment.carrier,
+    intraCross: _shipment.intraCross,
+    city: _shipment.city,
+    state: _shipment.state,
+    country: _shipment.country,
+    matchZipState: "NA",
+    matchedBy:  "NA"
+  }
 
   if($('.track-number').text()) {
     shipment.trackingId = $('.track-number').text();
@@ -55,13 +64,13 @@ const fetchDataPoint = (content, _shipment) => {
         shipment.matchedBy = "zip";
       } else if(utils.matchString(shipment.latestEvent, _shipment.city)) {
         shipment.matchZipState = true;
-          shipment.matchedBy = "city";
+        shipment.matchedBy = "city";
       } else if(utils.matchString(shipment.latestEvent, _shipment.state)) {
         shipment.matchZipState = true;
-          shipment.matchedBy = "state";
+        shipment.matchedBy = "state";
       } else if(utils.matchString(shipment.latestEvent, _shipment.country)) {
         shipment.matchZipState = true;
-          shipment.matchedBy = "country";
+        shipment.matchedBy = "country";
       } else {
         shipment.matchZipState = false;
       }

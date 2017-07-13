@@ -1,6 +1,6 @@
 const _ = require("underscore");
 
-const SPLIT_LIMIT = 3;
+const SPLIT_LIMIT = 40;
 
 const getKeyProperties = (array, property) => {
   let list = [];
@@ -63,10 +63,19 @@ const splitCarrierShipments = (shipments) => {
   return _shipments;
 }
 
+const uniqueTrackingId = (shipments) => {
+  let ids = [];
+  _.each(shipments, (_shipment) => {
+    ids.push(_shipment.trackingId);
+  });
+  return _.uniq(ids);
+}
+
 module.exports =  {
   getKeyProperties,
   matchString,
   setDefaultCarrierUrl,
   groupByCarrier,
-  splitCarrierShipments
+  splitCarrierShipments,
+  uniqueTrackingId
 }
