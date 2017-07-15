@@ -1,4 +1,5 @@
-const phantom = require('phantom');
+const phantom = require('phantom'),
+      cheerio = require('cheerio');
 
 const TIMEOUT = 120000;
 const headlessCrawl = (trackingId, url) => {
@@ -18,6 +19,10 @@ const headlessCrawl = (trackingId, url) => {
     setTimeout(async () => {
       const content = await page.property('content');
       await instance.exit();
+      const $ = cheerio.load(content);
+      if(!$('.newest').text()) {
+        reject();
+      }
       resolve(content);
     }, TIMEOUT);
   });
