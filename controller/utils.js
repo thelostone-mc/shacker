@@ -16,7 +16,10 @@ const getKeyProperties = (array, property) => {
 };
 
 const matchString = (string, matcher) => {
-  const pattern = new RegExp(matcher, "i");
+  if(!matcher || !string)
+    return false;
+
+  const pattern = new RegExp(matcher.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1"), "i");
   return string.match(pattern);
 };
 

@@ -1,7 +1,10 @@
 const phantom = require('phantom'),
-      cheerio = require('cheerio');
+      cheerio = require('cheerio'),
+      sleep = require('sleep');
 
-const TIMEOUT = 120000;
+const TIMEOUT = 90000;
+const SLEEP = 213;
+
 const headlessCrawl = (trackingId, url) => {
   return new Promise(async (resolve, reject) => {
 
@@ -10,21 +13,29 @@ const headlessCrawl = (trackingId, url) => {
       return reject("trackingId: Invalid");
     }
 
-    const instance = await phantom.create();
-    url = url + trackingId;
+    try {
+      const instance = await phantom.create();
+      url = url + trackingId;
 
-    const page = await instance.createPage();
-    const status = await page.open(url);
+      const page = await instance.createPage();
+      const status = await page.open(url);
 
-    setTimeout(async () => {
-      const content = await page.property('content');
-      await instance.exit();
-      const $ = cheerio.load(content);
-      if(!$('.newest').text()) {
-        reject();
-      }
-      resolve(content);
-    }, TIMEOUT);
+      setTimeout(async () => {
+        const content = await page.property('content');
+        await instance.exit();
+        const $ = cheerio.load(content);
+        if($('#jsTrkAlert').text()) {
+          console.log("Alertbox", url, ($('#jsTrkAlert').text()));
+          sleep.sleep(SLEEP);
+          reject();
+        }
+        resolve(content);
+      }, TIMEOUT);
+    } catch (error) {
+      console.log("phantomjs: refusal", error, url);
+      sleep.sleep(SLEEP);
+      reject();
+    }
   });
 };
 

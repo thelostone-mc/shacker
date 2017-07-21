@@ -6,7 +6,7 @@ const crawler = require('./controller/crawler.js');
       fs = require('fs'),
       _ = require("underscore");
 
-const TIMEOUT = 200000;
+const TIMEOUT = 120000;
 
 const inputDataSet = test.shipments;
 const uniqueIds = utils.uniqueTrackingId(inputDataSet);
@@ -25,7 +25,7 @@ _.each(carriersShipment, (carrier, i) => {
     const shipmentIds = utils.getKeyProperties(carrier.shipments, "trackingId");
 
     promiseRetry((retry, number) => {
-      if(number > 1) console.log("retrying: ", number, shipmentIds);
+      if(number > 1) console.log("retrying: ", number, "Bucket: ", i);
       return crawler.headlessCrawl(shipmentIds, url).catch(retry);
     }).then(async (content) => {
       purifier.extractDataSet(content, carrier.shipments).then((_dataSet) => {
