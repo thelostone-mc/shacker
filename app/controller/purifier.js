@@ -7,7 +7,10 @@ const extractDataSet = (content, _shipments) => {
     let shipments = [];
 
     if(!$('.jsResultBlock').text()) {
-      console.log("extractDataUnit: No results found");
+      const msg = "extractDataUnit: No results found";
+      console.log(_shipments);
+      console.log(msg);
+      reject(msg);
     }
 
     $('.jsResultBlock').filter((i, shipment) => {
@@ -36,7 +39,8 @@ const fetchDataPoint = (content, _shipment) => {
     state: _shipment.state,
     country: _shipment.country,
     matchZipState: "NA",
-    matchedBy:  "NA"
+    matchedBy:  "NA",
+    tracked: true
   }
 
   if($('.track-number').text()) {

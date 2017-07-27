@@ -2,6 +2,13 @@ const _ = require("underscore");
 
 const SPLIT_LIMIT = 40;
 
+const caseUpper = (shipments) => {
+  _.each(shipments, (shipment) => {
+    shipment.trackingId = shipment.trackingId.toUpperCase();
+  });
+  return shipments;
+}
+
 const getKeyProperties = (array, property) => {
   let list = [];
   array.forEach((object) => {
@@ -75,6 +82,7 @@ const uniqueTrackingId = (shipments) => {
 }
 
 module.exports =  {
+  caseUpper,
   getKeyProperties,
   matchString,
   setDefaultCarrierUrl,
