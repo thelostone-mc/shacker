@@ -24,7 +24,7 @@ const headlessCrawl = (trackingId, url) => {
         const content = await page.property('content');
         await instance.exit();
         const $ = cheerio.load(content);
-        if($('#jsTrkAlert').text()) {
+        if($('#jsTrkAlert').text() || !$('.jsResultBlock').text()) {
           console.log("Alertbox", url, ($('#jsTrkAlert').text()));
           sleep.sleep(SLEEP);
           reject();

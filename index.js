@@ -3,15 +3,16 @@ const Shipment = require('./app/crud/Shipment'),
       purifier = require('./app/controller/purifier.js'),
       utils = require('./app/controller/utils.js'),
       promiseRetry = require('promise-retry'),
+      schedule = require('node-schedule'),
       fs = require('fs'),
       _ = require("underscore");
 
 const TIMEOUT = 120000;
 const _input = './test.json';
 
-const init = () => {
+const init = (newData) => {
   return new Promise((resolve, reject) => {
-    Shipment.cleanUp().then((fileRead) => {
+    Shipment.cleanUp(newData).then((fileRead) => {
       if(fileRead) {
         fs.readFile(_input, 'utf8', (err, data) => {
           if (err)
@@ -83,14 +84,26 @@ const writeToFile = (dataSet) => {
       throw err;
     }
     console.log("shacker: written To file");
+    Shipment.cleanUp();
     return;
   });
 };
 
-init().then(() => {
+init(false).then(() => {
   beginShack().then((shipments) => {
     writeToFile(shipments);
   });
 }).catch((err) => {
   console.log("error:", err);
+});
+
+schedule.scheduleJob('0 0 * * *', function() {
+  const newData = true;
+  init(newData).then(() => {
+    beginShack().then((shipments) => {
+      writeToFile(shipments);
+    });
+  }).catch((err) => {
+    console.log("error:", err);
+  });
 });

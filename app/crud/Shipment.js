@@ -88,32 +88,36 @@ const bulkUpdate = (shipments) => {
   });
 };
 
-const cleanUp = () => {
+const cleanUp = (newData) => {
   let fileRead = true;
   return new Promise((resolve, reject) => {
-    getCount().then((count) => {
-      if(count != 0) {
-        getUntrackedShipments().then((_shipments) => {
-          if(_shipments.length == 0) {
-            console.log("test: DB cleanup");
-            Shipment.collection.drop((err) => {
-              if (err) {
-                console.log("cleanUp: failed to drop collection");
-                reject(err);
-              }
+    if(newData) {
+      resolve(fileRead);
+    } else {
+      getCount().then((count) => {
+        if(count != 0) {
+          getUntrackedShipments().then((_shipments) => {
+            if(_shipments.length == 0) {
+              console.log("test: DB cleanup");
+              Shipment.collection.drop((err) => {
+                if (err) {
+                  console.log("cleanUp: failed to drop collection");
+                  reject(err);
+                }
+                resolve(fileRead);
+              });
+            } else {
+              console.log("test: no clean server crashed");
+              fileRead = false;
               resolve(fileRead);
-            });
-          } else {
-            console.log("test: no clean server crashed");
-            fileRead = false;
-            resolve(fileRead);
-          }
-        });
-      } else {
-        console.log("test: no clean as count = 0");
-        resolve(fileRead);
-      }
-    });
+            }
+          });
+        } else {
+          console.log("test: no clean as count = 0");
+          resolve(fileRead);
+        }
+      });
+    }
   });
 };
 
