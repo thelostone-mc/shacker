@@ -1,9 +1,7 @@
 const phantom = require('phantom'),
       cheerio = require('cheerio'),
       sleep = require('sleep');
-
-const TIMEOUT = 90000;
-const SLEEP = 213;
+      config = require('../../config');
 
 const headlessCrawl = (trackingId, url) => {
   return new Promise(async (resolve, reject) => {
@@ -26,14 +24,14 @@ const headlessCrawl = (trackingId, url) => {
         const $ = cheerio.load(content);
         if($('#jsTrkAlert').text() || !$('.jsResultBlock').text()) {
           console.log("Alertbox", url, ($('#jsTrkAlert').text()));
-          sleep.sleep(SLEEP);
+          sleep.sleep(config.SERVER_REJECT_SLEEP);
           reject();
         }
         resolve(content);
-      }, TIMEOUT);
+      }, config.PHANTOM_TIMEOUT);
     } catch (error) {
       console.log("phantomjs: refusal", error, url);
-      sleep.sleep(SLEEP);
+      sleep.sleep(config.SERVER_REJECT_SLEEP);
       reject();
     }
   });

@@ -1,4 +1,5 @@
 const Shipment = require('./app/crud/Shipment'),
+      ShipmentLog = require('./app/crud/ShipmentLog'),
       crawler = require('./app/controller/crawler.js'),
       purifier = require('./app/controller/purifier.js'),
       utils = require('./app/controller/utils.js'),
@@ -7,7 +8,6 @@ const Shipment = require('./app/crud/Shipment'),
       fs = require('fs'),
       _ = require("underscore");
 
-const TIMEOUT = 120000;
 const _input = './test.json';
 
 const init = (newData) => {
@@ -71,13 +71,14 @@ const beginShack = () => {
               console.log("error invoking extractDataSet", err);
             });
           });
-        }, TIMEOUT * i, i);
+        }, config.TIMEOUT * i, i);
       });
     });
   });
 };
 
 const writeToFile = (dataSet) => {
+  ShipmentLog.bulkInsert(dataSet);
   fs.writeFile("./_trackingOutput.json", JSON.stringify(dataSet, null, 2), function(err) {
     if(err) {
       console.log(err);

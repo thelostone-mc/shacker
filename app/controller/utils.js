@@ -1,13 +1,39 @@
-const _ = require("underscore");
+const _ = require("underscore"),
+      moment = require("moment"),
+      config = require("../../config");
 
-const SPLIT_LIMIT = 40;
+const addDate = (shipments) => {
+  const currentDate = moment().format("l");
+  let _shipmentsLog = [];
+  _.each(shipments, (shipment) => {
+    const _shipment = {
+      "attackCaseId": shipment.attackCaseId,
+      "carrier": shipment.carrier,
+      "intraCross": shipment.intraCross,
+      "city": shipment.city,
+      "state": shipment.state,
+      "country": shipment.country,
+      "matchZipState": shipment.matchZipState,
+      "matchedBy": shipment.matchedBy,
+      "tracked": shipment.tracked,
+      "trackingId": shipment.trackingId,
+      "flagStatus": shipment.flagStatus,
+      "latestEvent": shipment.latestEvent,
+      "start": shipment.start,
+      "end": shipment.end,
+      "entryDate":  currentDate,
+    };
+    _shipmentsLog.push(_shipment);
+  });
+  return _shipmentsLog;
+};
 
 const caseUpper = (shipments) => {
   _.each(shipments, (shipment) => {
     shipment.trackingId = shipment.trackingId.toUpperCase();
   });
   return shipments;
-}
+};
 
 const getKeyProperties = (array, property) => {
   let list = [];
@@ -54,13 +80,13 @@ const splitCarrierShipments = (shipments) => {
   _.each(shipments, (carriersShipment, index) => {
     const url = carriersShipment.url;
     const shipments = carriersShipment.shipments;
-    if(shipments.length / SPLIT_LIMIT > 0) {
-      const buckets = Math.ceil(shipments.length / SPLIT_LIMIT);
+    if(shipments.length / config.SPLIT_LIMIT > 0) {
+      const buckets = Math.ceil(shipments.length / config.SPLIT_LIMIT);
 
       for (let i = 0; i < buckets; i++) {
         const shipment = {
           url: url,
-          shipments: shipments.splice(0, SPLIT_LIMIT)
+          shipments: shipments.splice(0, config.SPLIT_LIMIT)
         };
         _shipments.push(shipment);
       }
@@ -82,6 +108,7 @@ const uniqueTrackingId = (shipments) => {
 }
 
 module.exports =  {
+  addDate,
   caseUpper,
   getKeyProperties,
   matchString,
