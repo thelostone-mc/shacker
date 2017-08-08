@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 var ShipmentLogSchema = new Schema({
   attackCaseId: String,
   carrier: String,
+  url: String,
   intraCross: String,
   city: String,
   state: String,

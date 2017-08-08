@@ -9,6 +9,7 @@ const addDate = (shipments) => {
     const _shipment = {
       "attackCaseId": shipment.attackCaseId,
       "carrier": shipment.carrier,
+      "url": shipment.url,
       "intraCross": shipment.intraCross,
       "city": shipment.city,
       "state": shipment.state,
@@ -107,6 +108,21 @@ const uniqueTrackingId = (shipments) => {
   return _.uniq(ids);
 }
 
+const checkUnique = (carriersShipment) => {
+  _.each(carriersShipment, (carrier, i) => {
+    const uniqueIds = uniqueTrackingId(carrier.shipments);
+    if(carrier.shipments.length != uniqueIds.length) {
+      console.log(
+        "Shipping Ids within carrier", carrier.url, "is not unique",
+        "Input Ids:", carrier.shipments.length,
+        "UniqueIds:", uniqueIds.length
+      );
+      return false;
+    }
+  });
+  return true;
+}
+
 module.exports =  {
   addDate,
   caseUpper,
@@ -115,5 +131,6 @@ module.exports =  {
   setDefaultCarrierUrl,
   groupByCarrier,
   splitCarrierShipments,
-  uniqueTrackingId
+  uniqueTrackingId,
+  checkUnique
 }

@@ -71,7 +71,8 @@ const bulkInsert = (shipments) => {
 const bulkUpsert = (shipments) => {
   const bulk = Shipment.collection.initializeUnorderedBulkOp();
   shipments.map((shipment) => {
-    bulk.find( {trackingId: shipment.trackingId} ).upsert().replaceOne(shipment);
+    bulk.find( {trackingId: shipment.trackingId, url: shipment.url} )
+        .upsert().replaceOne(shipment);
   });
   bulk.execute().then((x) => {
     console.log("Bulk Upsert done !");
@@ -81,7 +82,8 @@ const bulkUpsert = (shipments) => {
 const bulkUpdate = (shipments) => {
   const bulk = Shipment.collection.initializeUnorderedBulkOp();
   shipments.map((shipment) => {
-    bulk.find( {trackingId: shipment.trackingId} ).replaceOne(shipment);
+    bulk.find( {trackingId: shipment.trackingId, url: shipment.url} )
+        .replaceOne(shipment);
   });
   bulk.execute().then((x) => {
     console.log("Bulk Update done !");

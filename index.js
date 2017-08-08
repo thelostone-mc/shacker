@@ -41,12 +41,14 @@ const init = (newData) => {
 const beginShack = () => {
   return new Promise((resolve, reject) => {
     Shipment.getUntrackedShipments().then((inputDataSet) => {
-      const uniqueIds = utils.uniqueTrackingId(inputDataSet);
-      console.log("Input Size:", inputDataSet.length,
-        "UniqueIds:", uniqueIds.length);
+      console.log("Input Size:", inputDataSet.length);
 
       const shipments = utils.setDefaultCarrierUrl(inputDataSet);
       let carriersShipment = utils.groupByCarrier(shipments);
+
+      if(!utils.checkUnique(carriersShipment)) {
+        reject("shipmentIds not unique");
+      }
 
       carriersShipment = utils.splitCarrierShipments(carriersShipment);
       let dataSet = 0;
@@ -64,7 +66,7 @@ const beginShack = () => {
               dataSet += _dataSet.length;
               Shipment.bulkUpdate(_dataSet);
               console.log("shacker updated: ", dataSet);
-              if(uniqueIds.length == dataSet) {
+              if(inputDataSet.length == dataSet) {
                 resolve(Shipment.getTrackedShipments());
               }
             }).catch((err) => {

@@ -34,6 +34,7 @@ const fetchDataPoint = (content, _shipment) => {
   let shipment = {
     attackCaseId: _shipment.attackCaseId,
     carrier: _shipment.carrier,
+    url: _shipment.url,
     intraCross: _shipment.intraCross,
     city: _shipment.city,
     state: _shipment.state,
