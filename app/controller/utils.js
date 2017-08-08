@@ -31,7 +31,9 @@ const addDate = (shipments) => {
 
 const caseUpper = (shipments) => {
   _.each(shipments, (shipment) => {
-    shipment.trackingId = shipment.trackingId.toUpperCase();
+    shipment.trackingId = shipment.trackingId
+                            .replace(/[\u{0080}-\u{FFFF}]/gu,"")
+                            .toUpperCase();
   });
   return shipments;
 };
