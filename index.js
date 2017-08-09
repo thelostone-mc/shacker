@@ -17,7 +17,9 @@ const init = (newData) => {
         fs.readFile(_input, 'utf8', (err, data) => {
           if (err)
             throw err;
-          const shipments = utils.caseUpper(JSON.parse(data));
+          const shipments = utils.setDefaultCarrierUrl(
+                              utils.caseUpper(JSON.parse(data))
+                            );
           if(shipments) {
             Shipment.bulkInsert(shipments).then(() => {
               resolve();
@@ -40,10 +42,9 @@ const init = (newData) => {
 
 const beginShack = () => {
   return new Promise((resolve, reject) => {
-    Shipment.getUntrackedShipments().then((inputDataSet) => {
-      console.log("Input Size:", inputDataSet.length);
+    Shipment.getUntrackedShipments().then((shipments) => {
+      console.log("Input Size:", shipments.length);
 
-      const shipments = utils.setDefaultCarrierUrl(inputDataSet);
       let carriersShipment = utils.groupByCarrier(shipments);
 
       if(!utils.checkUnique(carriersShipment)) {
@@ -66,7 +67,7 @@ const beginShack = () => {
               dataSet += _dataSet.length;
               Shipment.bulkUpdate(_dataSet);
               console.log("shacker updated: ", dataSet);
-              if(inputDataSet.length == dataSet) {
+              if(shipments.length == dataSet) {
                 resolve(Shipment.getTrackedShipments());
               }
             }).catch((err) => {
