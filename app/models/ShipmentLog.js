@@ -9,6 +9,7 @@ var ShipmentLogSchema = new Schema({
   city: String,
   state: String,
   country: String,
+  zip: String,
   trackingId: String,
   matchedBy: String,
   trackingId: String,

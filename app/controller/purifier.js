@@ -39,6 +39,7 @@ const fetchDataPoint = (content, _shipment) => {
     city: _shipment.city,
     state: _shipment.state,
     country: _shipment.country,
+    zip: _shipment.zip,
     matchZipState: "NA",
     matchedBy:  "NA",
     tracked: true

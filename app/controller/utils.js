@@ -14,6 +14,7 @@ const addDate = (shipments) => {
       "city": shipment.city,
       "state": shipment.state,
       "country": shipment.country,
+      "zip": shipment.zip,
       "matchZipState": shipment.matchZipState,
       "matchedBy": shipment.matchedBy,
       "tracked": shipment.tracked,
